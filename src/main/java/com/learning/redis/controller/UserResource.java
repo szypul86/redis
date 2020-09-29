@@ -21,24 +21,22 @@ public class UserResource {
   }
 
   @GetMapping("/add/{id}/{name}")
-  public User add(@PathVariable("id") String id, @PathVariable("name") String name){
-     userRepository.save(new User(id,name,20000L));
-     return userRepository.findById(id);
+  public User add(@PathVariable("id") String id, @PathVariable("name") String name) {
+    userRepository.save(new User(id, name, 20000L));
+    return userRepository.findById(id);
   }
 
   @GetMapping("/update/{id}/{name}")
-  public User update(@PathVariable("id") String id, @PathVariable("name") String name){
-    userRepository.save(new User(id,name,50000L));
+  public User update(@PathVariable("id") String id, @PathVariable("name") String name) {
+    userRepository.save(new User(id, name, 50000L));
     return userRepository.findById(id);
   }
 
   @GetMapping("/all/")
-  public Map<String,User> findAll(){
+  public Map<String, User> findAll() {
 
     return userRepository.findAll();
   }
-
-
 
 
 }

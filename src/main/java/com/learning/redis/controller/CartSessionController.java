@@ -30,6 +30,7 @@ public class CartSessionController {
   @GetMapping("/ordersys")
   String orders(@ModelAttribute("cart") ShoppingCart cart, Model model) {
     cart.addOrder(new Order(ids.incrementAndGet(), new Date(), Collections.emptyList()));
+
     model.addAttribute("orders", cart.getOrders());
     return "orders";
   }

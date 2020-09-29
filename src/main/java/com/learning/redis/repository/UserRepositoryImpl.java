@@ -2,7 +2,6 @@ package com.learning.redis.repository;
 
 import com.learning.redis.model.User;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
@@ -29,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
 
   @Override
   public User findById(String id) {
-    return  (User) hashOperations.get("USER", id);
+    return (User) hashOperations.get("USER", id);
   }
 
   @Override

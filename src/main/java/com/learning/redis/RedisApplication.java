@@ -35,7 +35,6 @@ import org.springframework.data.redis.core.GeoOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.PatternTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
 @EnableCaching
@@ -66,7 +65,8 @@ public class RedisApplication {
   }
 
   @Bean
-  ApplicationRunner repositories(OrderRepository orderRepository, LineItemRepository lineItemRepository) {
+  ApplicationRunner repositories(OrderRepository orderRepository,
+      LineItemRepository lineItemRepository) {
     return titledRunner("repositories", args -> {
       Long orderId = generateId();
       List<LineItem> itemList = Arrays.asList(new LineItem(orderId, generateId(), "plunger"),
@@ -79,7 +79,7 @@ public class RedisApplication {
       Order order = new Order(orderId, new Date(), itemList);
       orderRepository.save(order);
       Collection<Order> found = orderRepository.findByWhen(order.getWhen());
-  found.forEach(o -> log.info("found: " + o.toString()));
+      found.forEach(o -> log.info("found: " + o.toString()));
     });
   }
 
@@ -110,19 +110,19 @@ public class RedisApplication {
   private final String TOPIC = "chat";
 
   @Bean
-  ApplicationRunner pubSub (RedisTemplate<String,String> rt){
+  ApplicationRunner pubSub(RedisTemplate<String, String> rt) {
     return titledRunner("publish/subscribe", args -> {
-      rt.convertAndSend(TOPIC,"Hello world at " + Instant.now().toString());
+      rt.convertAndSend(TOPIC, "Hello world at " + Instant.now().toString());
     });
   }
 
   @Bean
-  RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory cf){
+  RedisMessageListenerContainer redisMessageListenerContainer(RedisConnectionFactory cf) {
     MessageListener ml = new MessageListener() {
       @Override
       public void onMessage(Message message, byte[] bytes) {
         String str = new String(message.getBody());
-        log.info("message from: "+ TOPIC+ " : " +str);
+        log.info("message from: " + TOPIC + " : " + str);
       }
     };
     RedisMessageListenerContainer mlc = new RedisMessageListenerContainer();
@@ -132,7 +132,7 @@ public class RedisApplication {
   }
 
   @Bean
-  CacheManager redisCache (RedisConnectionFactory cf){
+  CacheManager redisCache(RedisConnectionFactory cf) {
     return RedisCacheManager.builder(cf).build();
   }
 
@@ -140,17 +140,17 @@ public class RedisApplication {
   ApplicationRunner cache(OrderService orderService) {
     return titledRunner("caching", args -> {
       Runnable measure = () -> orderService.orderById(1L);
-      log.info("first: "+ measure(measure));
-      log.info("second: "+ measure(measure));
-      log.info("third: "+ measure(measure));
+      log.info("first: " + measure(measure));
+      log.info("second: " + measure(measure));
+      log.info("third: " + measure(measure));
     });
   }
 
-  private long measure (Runnable r){
+  private long measure(Runnable r) {
     long start = System.currentTimeMillis();
     r.run();
     long stop = System.currentTimeMillis();
-    return stop-start;
+    return stop - start;
   }
 
   public static void main(String[] args) {
